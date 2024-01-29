@@ -1,5 +1,5 @@
 Pillow
 matplotlib
 numpy
-torch>=1.6.0
-torchvision>=0.7.0
+torch>=2.1.2+cu118
+torchvision>=0.15.0+cu117
