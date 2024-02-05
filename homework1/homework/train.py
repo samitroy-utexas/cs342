@@ -49,8 +49,6 @@ def train(args):
 
         val_accuracy = correct / total
         print('Validation Accuracy: {:.2f}%'.format(val_accuracy * 100))
-        if val_accuracy > 79.00:
-            break
 
     save_model(model)
 
