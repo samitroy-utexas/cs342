@@ -5,26 +5,38 @@ import torch.utils.tensorboard as tb
 
 def test_logging(train_logger, valid_logger):
 
-    """
-    Your code here.
-    Finish logging the dummy loss and accuracy
-    Log the loss every iteration, the accuracy only after each epoch
-    Make sure to set global_step correctly, for epoch=0, iteration=0: global_step=0
-    Call the loss 'loss', and accuracy 'accuracy' (no slash or other namespace)
-    """
+    global_step = 0  # Initialize global step
 
     # This is a strongly simplified training loop
     for epoch in range(10):
         torch.manual_seed(epoch)
+        train_loss_epoch = 0
+        train_accuracy_epoch = torch.zeros(10)
         for iteration in range(20):
-            dummy_train_loss = 0.9**(epoch+iteration/20.)
-            dummy_train_accuracy = epoch/10. + torch.randn(10)
-            raise NotImplementedError('Log the training loss')
-        raise NotImplementedError('Log the training accuracy')
+            train_loss = 0.9 ** (epoch + iteration / 20.)
+            train_loss_epoch += train_loss
+            train_logger.add_scalar('loss', train_loss, global_step=global_step)
+            train_accuracy = epoch / 10. + torch.randn(10)
+            train_accuracy_epoch += train_accuracy
+            global_step += 1
+
+        print('loss=%0.3f, epoch=%d' % (train_loss_epoch, epoch))
+
+        # Log the training accuracy
+        train_accuracy_epoch /= 20  # Average accuracy over all iterations
+        train_logger.add_scalar('accuracy', train_accuracy_epoch.mean(), global_step=global_step)
+        print('accuracy=%0.3f, epoch=%d' % (train_accuracy_epoch.mean(), epoch))
+
         torch.manual_seed(epoch)
+        valid_accuracy_epoch = torch.zeros(10)
         for iteration in range(10):
-            dummy_validation_accuracy = epoch / 10. + torch.randn(10)
-        raise NotImplementedError('Log the validation accuracy')
+            validation_accuracy = epoch / 10. + torch.randn(10)
+            valid_accuracy_epoch += validation_accuracy
+
+        # Log the validation accuracy
+        valid_accuracy_epoch /= 10  # Average accuracy over all iterations
+        valid_logger.add_scalar('accuracy', valid_accuracy_epoch.mean(), global_step=global_step)
+        print('accuracy=%0.3f, epoch=%d' % (valid_accuracy_epoch.mean(), epoch))
 
 
 if __name__ == "__main__":
